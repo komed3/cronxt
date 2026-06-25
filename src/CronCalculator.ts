@@ -17,4 +17,9 @@ import { CronParser } from './CronParser';
 export class CronCalculator {
   private readonly parser: CronParser;
   constructor() { this.parser = new CronParser() }
+
+  /** Create a Date shifted by a given number of minutes. */
+  private shiftDateByMin ( date: Date, minutes: number ) : Date {
+    return new Date( date.getTime() + ( minutes * 60000 ) );
+  }
 }
