@@ -74,4 +74,15 @@ export class CronParser {
 
     return components;
   }
+
+  /** Compute the full set of matching integers from parsed components. */
+  private computeValues ( components: ParsedFieldComponent[], fieldName: CronFieldName ) : Set< number > {
+    const def = FIELD_BY_NAME[ fieldName ], values = new Set< number >();
+
+    for ( const comp of components )
+      for ( let v = comp.start; v <= comp.end; v += comp.step )
+        values.add( v );
+
+    return values;
+  }
 }
