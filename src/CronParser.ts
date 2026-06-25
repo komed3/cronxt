@@ -4,7 +4,7 @@
  */
 
 import { FIELD_BY_NAME, FIELD_COUNT, SPECIAL_ALIASES } from './const';
-import type { CronFieldName, ParsedFieldComponent, SpecialAlias } from './types';
+import type { CronFieldName, CronObject, ParsedFieldComponent, SpecialAlias } from './types';
 
 /**
  * CronParser parses and validates cron expressions into structured objects.
@@ -108,5 +108,20 @@ export class CronParser {
 
     for ( const v of values ) if ( v < def.min || v > def.max )
       throw new Error( `Value ${ v } out of range [${ def.min }-${ def.max }] for field "${ fieldName }"` );
+  }
+
+  /**
+   * Parse a cron expression string into a structured CronObject.
+   * 
+   * @param expression - A standard 5-field cron string or special alias.
+   * @returns A CronObject with each field's raw string value.
+   * @throws Error if the expression is malformed.
+   * 
+   * @example
+   * parser.parse( '0 9 * * MON' );
+   */
+  public parse ( expression: string ) : CronObject {
+    const [ minute, hour, dayOfMonth, month, dayOfWeek ] = this.splitFields( this.expandAlias( expression ) );
+    return { minute, hour, dayOfMonth, month, dayOfWeek };
   }
 }
