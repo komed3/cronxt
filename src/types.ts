@@ -5,6 +5,19 @@
 /** Names of the five standard cron fields in order. */
 export type CronFieldName = 'minute' | 'hour' | 'dayOfMonth' | 'month' | 'dayOfWeek';
 
+/** Special cron alias names. */
+export type SpecialAlias =
+  | '@yearly' | '@annually' | '@monthly' | '@weekly'
+  | '@daily' | '@midnight' | '@hourly' | '@reboot';
+
+/** Metadata for a single cron field definition. */
+export interface FieldDefinition {
+  name: CronFieldName;
+  min: number;
+  max: number;
+  aliases: Record< string, number >;
+}
+
 /** A parsed cron expression represented as an object with named fields. */
 export interface CronObject {
   /** Minute field (0-59) */
