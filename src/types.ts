@@ -17,14 +17,6 @@ export type CronTuple = readonly [
 /** Special cron alias names. */
 export type SpecialAlias = '@yearly' | '@annually' | '@monthly' | '@weekly' | '@daily' | '@midnight' | '@hourly';
 
-/** Metadata for a single cron field definition. */
-export interface FieldDefinition {
-  name: CronFieldName;
-  min: number;
-  max: number;
-  aliases: Record< string, number >;
-}
-
 /** A parsed cron expression represented as an object with named fields. */
 export interface CronObject {
   /** Minute field (0-59) */
@@ -69,6 +61,14 @@ export interface ScheduleController {
   on ( event: ScheduleEvent, handler: ( ...args: any[] ) => void ) : ScheduleController;
   /** Remove an event handler. */
   off ( event: ScheduleEvent, handler: ( ...args: any[] ) => void ) : ScheduleController;
+}
+
+/** @internal Metadata for a single cron field definition. */
+export interface FieldDefinition {
+  name: CronFieldName;
+  min: number;
+  max: number;
+  aliases: Record< string, number >;
 }
 
 /** @internal A parsed cron field component (range with step). */
