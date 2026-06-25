@@ -50,3 +50,23 @@ export interface ScheduleController {
   /** Remove an event handler. */
   off ( event: ScheduleEvent, handler: ( ...args: any[] ) => void ) : ScheduleController;
 }
+
+/** @internal A parsed cron field component (range with step). */
+export interface ParsedFieldComponent {
+  start: number;
+  end: number;
+  step: number;
+}
+
+/** @internal A fully parsed cron field with pre-computed value set. */
+export interface ParsedField {
+  name: CronFieldName;
+  components: ParsedFieldComponent[];
+  values: Set< number >;
+}
+
+/** @internal A fully parsed cron expression. */
+export interface ParsedCronExpression {
+  fields: Record< CronFieldName, ParsedField >;
+  source: string;
+}
