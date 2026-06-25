@@ -15,6 +15,7 @@ import type { CronFieldName, ParsedFieldComponent } from './types';
  * const valid = parser.validate( '0 9 * * MON' );
  */
 export class CronParser {
+  /** Expand a named alias (e.g. JAN) to its numeric value for the given field. */
   private resolveAlias ( token: string, fieldName: CronFieldName ) : string {
     const def = FIELD_BY_NAME[ fieldName ];
     if ( ! def ) return token;
@@ -25,6 +26,7 @@ export class CronParser {
     return token;
   }
 
+  /** Parse a single field token into components. */
   private parseFieldToken ( token: string, fieldName: CronFieldName ) : ParsedFieldComponent[] {
     const def = FIELD_BY_NAME[ fieldName ];
     const components: ParsedFieldComponent[] = [];
