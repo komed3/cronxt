@@ -37,3 +37,16 @@ export interface ScheduleOptions {
   /** IANA timezone string (e.g. 'UTC'). Defaults to local system timezone. */
   timezone?: string;
 }
+
+/** Events emitted by a ScheduleController. */
+export type ScheduleEvent = 'tick' | 'error' | 'stopped';
+
+/** Controller returned by schedule() for managing a scheduled job. */
+export interface ScheduleController {
+  /** Stop the scheduled job. No further callbacks will fire. */
+  stop () : void;
+  /** Register an event handler. */
+  on ( event: ScheduleEvent, handler: ( ...args: any[] ) => void ) : ScheduleController;
+  /** Remove an event handler. */
+  off ( event: ScheduleEvent, handler: ( ...args: any[] ) => void ) : ScheduleController;
+}
