@@ -35,6 +35,10 @@
     "README.md",
     "LICENSE"
   ],
+  "scripts": {
+    "build": "tsc && tsc-alias",
+    "prepublishOnly": "npm run build"
+  },
   "devDependencies": {
     "tsc-alias": "^1.8.17",
     "typescript": "^6.0.3"
