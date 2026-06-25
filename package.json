@@ -39,10 +39,13 @@
     "build:cjs": "tsc -p tsconfig.cjs.json",
     "build:dts": "tsc -p tsconfig.dts.json",
     "build:esm": "tsc -p tsconfig.esm.json",
-    "build": "npm run build:cjs && npm run build:dts && npm run build:esm && tsc-alias",
+    "build:all": "npm run build:cjs && npm run build:dts && npm run build:esm && tsc-alias",
+    "format": "prettier --ignore-path \"\" --write \"./dist/**/*.@(js|d.ts)\" --log-level warn",
+    "build": "npm run build:all && npm run format",
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {
+    "prettier": "^3.8.4",
     "tsc-alias": "^1.8.17",
     "typescript": "^6.0.3"
   }
