@@ -90,3 +90,13 @@ export interface ParsedCronExpression {
   fields: Record< CronFieldName, ParsedField >;
   source: string;
 }
+
+/** @internal Cron-relevant components from a Date. */
+export interface DateParts {
+  year: number;
+  month: number;
+  dayOfMonth: number;
+  hour: number;
+  minute: number;
+  dayOfWeek: number;
+}
