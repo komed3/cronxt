@@ -150,4 +150,19 @@ export class CronParser {
 
     return { fields, source: expression };
   }
+
+  /**
+   * Validate a cron expression without throwing.
+   * 
+   * @param expression - The cron expression to validate.
+   * @returns true if valid, false otherwise.
+   * 
+   * @example
+   * parser.validate( '0 9 * * MON' );  // true
+   * parser.validate( '99 * * * *' );   // false
+   */
+  public validate ( expression: string ) : boolean {
+    try { return this.parseFull( expression ) && true }
+    catch { return false }
+  }
 }
