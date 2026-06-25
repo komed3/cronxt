@@ -98,8 +98,8 @@ export class CronParser {
   }
 
   /** Compute the full set of matching integers from parsed components. */
-  private computeValues ( components: ParsedFieldComponent[], fieldName: CronFieldName ) : Set< number > {
-    const def = FIELD_BY_NAME[ fieldName ], values = new Set< number >();
+  private computeValues ( components: ParsedFieldComponent[] ) : Set< number > {
+    const values = new Set< number >();
 
     for ( const comp of components ) for ( let v = comp.start; v <= comp.end; v += comp.step )
       values.add( v );
@@ -145,7 +145,7 @@ export class CronParser {
     for ( let i = 0; i < FIELD_COUNT; i++ ) {
       const fieldName = FIELD_NAMES[ i ], token = tokens[ i ];
       const components = this.parseFieldToken( token, fieldName );
-      const values = this.computeValues( components, fieldName );
+      const values = this.computeValues( components );
       this.validateValues( values, fieldName );
       fields[ fieldName ] = { name: fieldName, components, values };
     }
