@@ -55,11 +55,13 @@
     "build:dts": "tsc -p tsconfig.dts.json",
     "build:esm": "tsc -p tsconfig.esm.json",
     "build:all": "npm run build:cjs && npm run build:dts && npm run build:esm && tsc-alias",
+    "bundle": "esbuild dist/esm/index.js --bundle --minify --format=iife --global-name=nxtcron --outfile=dist/nxtcron.js",
     "format": "prettier --ignore-path \"\" --write \"./dist/**/*.@(js|d.ts)\" --log-level warn",
-    "build": "npm run build:all && npm run format",
+    "build": "npm run build:all && npm run format && npm run bundle",
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {
+    "esbuild": "^0.28.1",
     "prettier": "^3.8.4",
     "tsc-alias": "^1.8.17",
     "typescript": "^6.0.3"
