@@ -36,7 +36,10 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "tsc && tsc-alias",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build:dts": "tsc -p tsconfig.dts.json",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "build": "npm run build:cjs && npm run build:dts && npm run build:esm && tsc-alias",
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {
