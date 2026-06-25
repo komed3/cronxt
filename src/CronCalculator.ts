@@ -44,6 +44,15 @@ export class CronCalculator {
     };
   }
 
+  /** Validate that two sets of date parts are compatible (undefined parts are ignored). */
+  private validateDateParts ( a: Partial< DateParts >, b: Partial< DateParts > ) : boolean {
+    for ( const key of [ 'year', 'month', 'dayOfMonth', 'hour', 'minute', 'dayOfWeek' ] as ( keyof DateParts )[] )
+      if ( a[ key ] !== undefined && b[ key ] !== undefined && a[ key ] !== b[ key ] )
+        return false;
+
+    return true;
+  }
+
   /**
    * Build a UTC Date from wall-clock components in a given timezone.
    * Uses Intl to find the exact UTC instant that produces the desired
@@ -57,16 +66,15 @@ export class CronCalculator {
 
     const candidate = new Date( approx.getTime() - offsetMs );
     const v = this.getDatePartsInTimezone( candidate, tz );
-    if ( v.hour === hour && v.minute === minute && v.dayOfMonth === day && v.month === month )
-      return candidate;
+
+    if ( this.validateDateParts( { hour, minute, dayOfMonth, month }, v ) ) return candidate;
 
     // Fallback: scan nearby minutes
     for ( let delta = -7200000; delta <= 7200000; delta += 60000 ) {
       const d = new Date( approx.getTime() + delta );
       const p = this.getDatePartsInTimezone( d, tz );
 
-      if ( p.year === year && p.month === month && p.dayOfMonth === day && p.hour === hour && p.minute === minute )
-        return d;
+      if ( this.validateDateParts( { year, month, dayOfMonth, hour, minute }, p ) ) return d;
     }
 
     return candidate;
