@@ -3,7 +3,7 @@
  * and special expression mappings. Pure data, no logic.
  */
 
-import type { FieldDefinition } from './types';
+import type { FieldDefinition, SpecialAlias } from './types';
 
 /** Ordered list of cron field definitions with valid ranges and named aliases. */
 export const FIELDS: FieldDefinition[] = [
@@ -17,4 +17,16 @@ export const FIELDS: FieldDefinition[] = [
   { name: 'dayOfWeek',  min: 0, max:  6, aliases: {
     SUN: 0, MON: 1, TUE: 2, WED: 3, THU: 4, FRI: 5, SAT: 6
   } }
-];
+] as const;
+
+/** Mapping of special cron aliases to their expanded 5-field equivalents. */
+export const SPECIAL_ALIASES: Record< SpecialAlias, string > = {
+  '@yearly':   '0 0 1 1 *',
+  '@annually': '0 0 1 1 *',
+  '@monthly':  '0 0 1 * *',
+  '@weekly':   '0 0 * * 0',
+  '@daily':    '0 0 * * *',
+  '@midnight': '0 0 * * *',
+  '@hourly':   '0 * * * *',
+  '@reboot':   '@reboot'
+} as const;
