@@ -79,10 +79,17 @@ export class CronParser {
   private computeValues ( components: ParsedFieldComponent[], fieldName: CronFieldName ) : Set< number > {
     const def = FIELD_BY_NAME[ fieldName ], values = new Set< number >();
 
-    for ( const comp of components )
-      for ( let v = comp.start; v <= comp.end; v += comp.step )
-        values.add( v );
+    for ( const comp of components ) for ( let v = comp.start; v <= comp.end; v += comp.step )
+      values.add( v );
 
     return values;
+  }
+
+  /** Validate that all computed values fall within the field's allowed range. */
+  private validateValues ( values: Set< number >, fieldName: CronFieldName ) : void {
+    const def = FIELD_BY_NAME[ fieldName ];
+
+    for ( const v of values ) if ( v < def.min || v > def.max )
+      throw new Error( `Value ${ v } out of range [${ def.min }-${ def.max }] for field "${ fieldName }"` );
   }
 }
