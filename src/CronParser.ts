@@ -18,9 +18,11 @@ import type {
  * const valid = parser.validate( '0 9 * * MON' );
  */
 export class CronParser {
+  private static readonly SPLIT = /\s+/;
+
   /** Split a cron expression string into its five field tokens. */
   private splitFields ( expression: string ) : CronTuple {
-    const parts = expression.trim().split( /\s+/ );
+    const parts = expression.trim().split( CronParser.SPLIT );
 
     if ( parts.length !== FIELD_COUNT )
       throw new Error( `Expected ${ FIELD_COUNT } fields, got ${ parts.length } in "${ expression }"` );
