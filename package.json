@@ -8,6 +8,17 @@
     "email": "webmaster@komed3.de",
     "url": "https://komed3.de"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/komed3/cronxt.git"
+  },
+  "bugs": {
+    "url": "https://github.com/komed3/cronxt/issues"
+  },
+  "funding": {
+    "type": "ko-fi",
+    "url": "https://ko-fi.com/komed3"
+  },
   "files": [
     "dist",
     "README.md",
