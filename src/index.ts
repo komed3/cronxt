@@ -30,3 +30,7 @@ export const validate = parser.validate.bind( parser );
 
 /** Create a cron expression string from a partial options object. Omitted fields default to wildcard. */
 export const fromObject = creator.fromObject.bind( creator );
+
+export default ( {
+  calculator, creator, parser, parse, validate, fromObject
+} ) as const;
