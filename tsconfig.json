@@ -2,17 +2,21 @@
   "compilerOptions": {
     "target": "ESNext",
     "moduleResolution": "bundler",
+    "lib": [ "ESNext", "ESNext.Intl" ],
     "declaration": false,
     "declarationMap": false,
     "sourceMap": false,
     "rootDir": "src",
+    "outDir": "dist",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "lib": [ "ESNext", "ESNext.Intl" ],
-    "types": [ "node" ]
+    "resolveJsonModule": true
+  },
+  "tsc-alias": {
+    "resolveFullPaths": true,
+    "extension": ".js"
   },
   "include": [ "src" ],
   "exclude": [ "node_modules", "dist" ]
