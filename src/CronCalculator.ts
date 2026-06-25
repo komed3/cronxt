@@ -79,4 +79,14 @@ export class CronCalculator {
 
     return candidate;
   }
+
+  /** Return the number of days in a given month (1-indexed). Handles leap years. */
+  private daysInMonth ( year: number, month: number ) : number {
+    return new Date( year, month, 0 ).getDate();
+  }
+
+  /** Compute the day of the week (0=Sun, 6=Sat) for a given date. */
+  private dayOfWeek ( year: number, month: number, day: number ) : number {
+    return new Date( year, month - 1, day ).getDay();
+  }
 }
