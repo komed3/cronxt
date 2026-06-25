@@ -1,5 +1,5 @@
 {
-  "name": "cronxt",
+  "name": "nxtcron",
   "description": "Lightweight, zero-dependency cron expression parser, validator, and scheduler written in TypeScript",
   "license": "MIT",
   "version": "1.0.0",
@@ -10,10 +10,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/komed3/cronxt.git"
+    "url": "git+https://github.com/komed3/nxtcron.git"
   },
   "bugs": {
-    "url": "https://github.com/komed3/cronxt/issues"
+    "url": "https://github.com/komed3/nxtcron/issues"
   },
   "funding": {
     "type": "ko-fi",
