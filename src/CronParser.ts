@@ -4,7 +4,7 @@
  */
 
 import { FIELD_BY_NAME, FIELD_COUNT, SPECIAL_ALIASES } from './const';
-import type { CronFieldName, CronObject, ParsedFieldComponent, SpecialAlias } from './types';
+import type { CronFieldName, CronObject, CronTuple, ParsedFieldComponent, SpecialAlias } from './types';
 
 /**
  * CronParser parses and validates cron expressions into structured objects.
@@ -16,13 +16,13 @@ import type { CronFieldName, CronObject, ParsedFieldComponent, SpecialAlias } fr
  */
 export class CronParser {
   /** Split a cron expression string into its five field tokens. */
-  private splitFields ( expression: string ) : string[] {
+  private splitFields ( expression: string ) : CronTuple {
     const parts = expression.trim().split( /\s+/ );
 
     if ( parts.length !== FIELD_COUNT )
       throw new Error( `Expected ${ FIELD_COUNT } fields, got ${ parts.length } in "${ expression }"` );
 
-    return parts;
+    return parts as unknown as CronTuple;
   }
 
   /** Expand a special alias into its 5-field equivalent. */
