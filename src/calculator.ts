@@ -1,24 +1,24 @@
 /**
- * CronCalculator
+ * Calculator
  * Computes next and previous run times for cron expressions.
  * Uses Intl.DateTimeFormat for all timezone handling (zero external deps).
  */
 
 import { WEEKDAY_MAP } from './const';
-import { CronParser } from './CronParser';
+import { Parser } from './parser';
 import type { DateParts } from './types';
 
 /**
- * CronCalculator computes next/previous scheduled run times for cron expressions.
+ * Computes next/previous scheduled run times for cron expressions.
  * 
  * @example
  * const calc = new CronCalculator();
  * calc.getNextRun( '0 9 * * MON', { timezone: 'America/New_York' } );
  * calc.getNextRuns( '0 9 * * 1-5', { after: new Date(), count: 5 } );
  */
-export class CronCalculator {
-  private readonly parser: CronParser;
-  constructor() { this.parser = new CronParser() }
+export class Calculator {
+  private readonly parser: Parser;
+  constructor() { this.parser = new Parser() }
 
   /** Create a Date shifted by a given number of minutes. */
   private shiftDateByMinutes ( date: Date, minutes: number ) : Date {
