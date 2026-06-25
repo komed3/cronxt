@@ -6,3 +6,8 @@
  * @version 1.0.0
  * @license MIT
  */
+
+export type {
+  CronFieldName, CronObject, CronOptions, CronTuple, RunOptions,
+  ScheduleController, ScheduleEvent, ScheduleOptions, SpecialAlias
+} from './types.js';
