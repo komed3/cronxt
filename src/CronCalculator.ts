@@ -29,9 +29,9 @@ export class CronCalculator {
    * Extract cron-relevant components from a Date in a specific timezone.
    * Uses Intl.DateTimeFormat with part extraction - no external tz libraries.
    */
-  private getDatePartsInTimezone ( date: Date, timezone: string ) : DateParts {
+  private getDatePartsInTimezone ( date: Date, tz: string ) : DateParts {
     const parts = new Intl.DateTimeFormat( 'en-US', {
-      timeZone: timezone, year: 'numeric', month: 'numeric', day: 'numeric',
+      timeZone: tz, year: 'numeric', month: 'numeric', day: 'numeric',
       hour: 'numeric', minute: 'numeric', weekday: 'short', hour12: false
     } ).formatToParts( date );
 
@@ -42,5 +42,33 @@ export class CronCalculator {
       year: int( 'year' ), month: int( 'month' ), dayOfMonth: int( 'day' ), hour: int( 'hour' ) % 24,
       minute: int( 'minute' ), dayOfWeek: WEEKDAY_MAP[ get( 'weekday' ) ] ?? 0
     };
+  }
+
+  /**
+   * Build a UTC Date from wall-clock components in a given timezone.
+   * Uses Intl to find the exact UTC instant that produces the desired
+   * wall-clock time in the target timezone.
+   */
+  private buildDateFromParts ( year: number, month: number, day: number, hour: number, minute: number, tz: string ) : Date {
+    const approx = new Date( Date.UTC( year, month - 1, day, hour, minute, 0, 0 ) );
+    const { hour: tzHour, minute: tzMinute, dayOfMonth, month: tzMonth } = this.getDatePartsInTimezone( approx, tz );
+    const offsetMs = ( tzHour - hour ) * 3.6e6 + ( tzMinute - minute ) * 6e4 +
+      ( dayOfMonth - day ) * 8.64e7 + ( tzMonth - month ) * 2.592e9;
+
+    const candidate = new Date( approx.getTime() - offsetMs );
+    const v = this.getDatePartsInTimezone( candidate, tz );
+    if ( v.hour === hour && v.minute === minute && v.dayOfMonth === day && v.month === month )
+      return candidate;
+
+    // Fallback: scan nearby minutes
+    for ( let delta = -7200000; delta <= 7200000; delta += 60000 ) {
+      const d = new Date( approx.getTime() + delta );
+      const p = this.getDatePartsInTimezone( d, tz );
+
+      if ( p.year === year && p.month === month && p.dayOfMonth === day && p.hour === hour && p.minute === minute )
+        return d;
+    }
+
+    return candidate;
   }
 }
