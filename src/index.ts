@@ -10,4 +10,11 @@
 export type {
   CronFieldName, CronObject, CronOptions, CronTuple, RunOptions,
   ScheduleController, ScheduleEvent, ScheduleOptions, SpecialAlias
-} from './types.js';
+} from './types';
+
+import { CronCalculator } from './calculator';
+import { CronCreator } from './creator';
+import { CronParser } from './parser';
+
+export { CronCalculator, CronCreator, CronParser };
+
