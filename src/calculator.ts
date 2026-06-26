@@ -25,6 +25,32 @@ export class CronCalculator {
   }
 
   /**
+   * Returns only the relevant candidates using binary search jumps.
+   * No full array scans, no filtering, no allocation loops.
+   */
+  private pick ( arr: readonly number[], min: number, max: number, cur: number, lvl: boolean, dir: 1 | -1 ) : readonly number[] {
+    if ( ! arr.length ) return [];
+
+    const start = lvl ? ( dir === 1 ? cur + 1 : cur - 1 ) : ( dir === 1 ? min : max );
+    const idx = dir === 1 ? this.lower( arr, start ) : this.upper( arr, start );
+    const out: number[] = [];
+
+    if ( dir === 1 ) for ( let i = idx; i < arr.length; i++ ) {
+      const value = arr[ i ];
+      if ( value > max ) break;
+      out.push( value );
+    }
+
+    else for ( let i = idx; i >= 0; i-- ) {
+      const value = arr[ i ];
+      if ( value < min ) break;
+      out.push( value );
+    }
+
+    return out;
+  }
+
+  /**
    * Core jump-based scheduler.
    * Walks year → month → day → hour → minute using binary search jumps.
    */
