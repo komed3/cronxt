@@ -120,3 +120,6 @@ export interface DateParts {
   hour: number;
   minute: number;
 }
+
+/** @internal Scheduler event handler function. */
+export type EventHandler = ( ...args: any[] ) => void;

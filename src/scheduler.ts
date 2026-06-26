@@ -4,7 +4,7 @@
  */
 
 import { CronCalculator } from './calculator';
-import type { ScheduleController, ScheduleEvent, ScheduleOptions } from './types';
+import type { EventHandler, ScheduleController, ScheduleEvent, ScheduleOptions } from './types';
 
 /** CronScheduler schedules callbacks to run according to a cron expression. */
 export class CronScheduler {
@@ -32,5 +32,10 @@ export class CronScheduler {
    * job.on( 'tick', () => console.log( 'about to fire' ) );
    * job.stop();
    */
-  public schedule ( expression: string, callback: () => void, options?: ScheduleOptions ) : ScheduleController {}
+  public schedule ( expression: string, callback: () => void, options?: ScheduleOptions ) : ScheduleController {
+    const tz = options?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const handler: Record< ScheduleEvent, Set< EventHandler > > = {
+      tick: new Set(), error: new Set(), stopped: new Set()
+    };
+  }
 }
