@@ -65,10 +65,10 @@ export interface ScheduleController {
 
 /** @internal Metadata for a single cron field definition. */
 export interface FieldDefinition {
-  name: CronFieldName;
-  min: number;
-  max: number;
-  aliases: Record< string, number >;
+  readonly name: CronFieldName;
+  readonly min: number;
+  readonly max: number;
+  readonly aliases: Record< string, number >;
 }
 
 /** @internal A parsed cron field component (range with step). */
@@ -81,8 +81,8 @@ export interface ParsedFieldComponent {
 /** @internal A fully parsed cron field with pre-computed value set. */
 export interface ParsedField {
   name: CronFieldName;
-  components: ParsedFieldComponent[];
-  values: Set< number >;
+  components: ReadonlyArray< ParsedFieldComponent >;
+  values: ReadonlySet< number >;
 }
 
 /** @internal A fully parsed cron expression. */
