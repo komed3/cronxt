@@ -1,5 +1,5 @@
 /**
- * Creator
+ * CronCreator
  * Builds cron expression strings from structured option objects.
  */
 

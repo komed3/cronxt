@@ -1,5 +1,5 @@
 /**
- * Parser
+ * CronParser
  * Parses and validates cron expressions.
  */
 
