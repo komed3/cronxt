@@ -114,6 +114,13 @@ export class CronBuilder {
     return this.set( values );
   }
 
+  /** Define a range (min → max). */
+  public range ( from: number, to: number ) : CronBuilder {
+    return this.next( { [ this.requireField() ] :
+      `${ this.validateValue( from ) }-${ this.validateValue( to ) }`
+    } );
+  }
+
   /** Output as standard 5-field cron expression string. */
   public toString () : string {
     return FIELD_NAMES.map( f => this.state[ f ] ).join( ' ' );
