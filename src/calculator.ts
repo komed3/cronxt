@@ -12,6 +12,8 @@ export class CronCalculator {
   private static readonly parser = CronParser.getInstance();
   private static instance?: CronCalculator;
 
+  private readonly formatter = new Map< string, Intl.DateTimeFormat >();
+
   /** Get the CronCalculator instance. */
   public static getInstance () : CronCalculator {
     return this.instance ??= new CronCalculator();
@@ -22,6 +24,17 @@ export class CronCalculator {
   /** Resolve string or parsed expression into ParsedCronExpression. */
   private resolve ( input: CronInput ) : ParsedCronExpression {
     return typeof input === 'string' ? CronCalculator.parser.parse( input ) : input;
+  }
+
+  /** Format a date into timezone-aligned parts. */
+  private format ( tz: string, date: Date ) : Intl.DateTimeFormatPart[] {
+    let formatter = this.formatter.get( tz );
+    if ( ! formatter ) this.formatter.set( tz, formatter = new Intl.DateTimeFormat( 'en-US', {
+      timeZone: tz, year: 'numeric', month: 'numeric', day: 'numeric',
+      hour: 'numeric', minute: 'numeric', hour12: false
+    } ) );
+
+    return formatter.formatToParts( date );
   }
 
   /** Get number of days in month. */
@@ -108,11 +121,7 @@ export class CronCalculator {
 
   /** Extract timezone-safe date parts. */
   private parts ( date: Date, tz: string ) : DateParts {
-    const f = new Intl.DateTimeFormat( 'en-US', {
-      timeZone: tz, year: 'numeric', month: 'numeric', day: 'numeric',
-      hour: 'numeric', minute: 'numeric', hour12: false
-    } ).formatToParts( date );
-
+    const f = this.format( tz, date );
     const g = ( t: string ) => Number( f.find( p => p.type === t )?.value ?? 0 );
 
     return {
@@ -124,15 +133,14 @@ export class CronCalculator {
   /** Build UTC Date from timezone-aligned components. */
   private build ( year: number, month: number, day: number, hour: number, minute: number, tz: string ) : Date {
     const base = new Date( Date.UTC( year, month - 1, day, hour, minute ) );
-    const f = new Intl.DateTimeFormat( 'en-US', {
-      timeZone: tz, year: 'numeric', month: 'numeric', day: 'numeric',
-      hour: 'numeric', minute: 'numeric', hour12: false
-    } ).formatToParts( base );
+    const f = this.format( tz, base );
+    const g = ( t: string ) => Number( f.find( p => p.type === t )?.value ?? 0 );
 
-    const g = ( t: string) => Number( f.find( p => p.type === t )?.value ?? 0 );
-
-    const diff = ( g( 'hour' ) - hour ) * 3.6e6 + ( g( 'minute' ) - minute ) * 6e4 + ( g( 'day' ) - day ) * 8.64e7;
-    return new Date( base.getTime() - diff );
+    return new Date( base.getTime() - (
+      ( g( 'hour' ) - hour ) * 3.6e6 +
+      ( g( 'minute' ) - minute ) * 6e4 +
+      ( g( 'day' ) - day ) * 8.64e7
+    ) );
   }
 
   /**
