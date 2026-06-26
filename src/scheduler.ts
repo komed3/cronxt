@@ -70,5 +70,15 @@ export class CronScheduler {
         emit( 'error', err );
       }
     };
+
+    // Handle @reboot: fire once immediately
+    if ( typeof expr === 'string' && expr.trim().toLowerCase() === '@reboot' ) {
+      if ( ! stopped ) {
+        try { emit( 'tick' ), callback() }
+        catch ( err ) { emit( 'error', err ) }
+      }
+    } else {
+      scheduleNext();
+    }
   }
 }
