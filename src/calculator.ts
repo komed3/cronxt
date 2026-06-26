@@ -36,12 +36,8 @@ export class CronCalculator {
       if ( ! months.length ) return null;
 
       for ( let mi = 0; mi < months.length; mi++ ) {
-        const month = months[ mi ];
-        const maxDay = this.daysInMonth( year, month );
-        const days = this.pick(
-          parsed.fields.dayOfMonth.sorted, 1, maxDay, p.day,
-          year === p.year && month === p.month,
-          dir
+        const month = months[ mi ], maxDay = this.daysInMonth( year, month ), days = this.pick(
+          parsed.fields.dayOfMonth.sorted, 1, maxDay, p.day, year === p.year && month === p.month, dir
         );
 
         if ( ! days.length ) continue;
@@ -59,8 +55,7 @@ export class CronCalculator {
           if ( ! hours.length ) continue;
 
           for ( let hi = 0; hi < hours.length; hi++ ) {
-            const hour = hours[ hi ];
-            const minutes = this.pick(
+            const hour = hours[ hi ], minutes = this.pick(
               parsed.fields.minute.sorted, 0, 59, p.minute,
               year === p.year && month === p.month && day === p.day && hour === p.hour,
               dir
