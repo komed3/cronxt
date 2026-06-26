@@ -69,6 +69,11 @@ export class CronBuilder {
     return value;
   }
 
+  /** Build a field expression string. */
+  private buildExpr ( values: ( string | number )[] ) : string {
+    return values.map( v => this.normalize( v ) ).join( ',' );
+  }
+
   /** Select the minute field. */
   public minute () : CronBuilder {
     return this.next( {}, 'minute' );
