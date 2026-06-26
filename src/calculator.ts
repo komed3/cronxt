@@ -24,6 +24,25 @@ export class CronCalculator {
     return typeof input === 'string' ? CronCalculator.parser.parse( input ) : input;
   }
 
+  /** Shared execution loop for next/prev. */
+  private run ( expr: CronInput, opt: RunOptions, dir: 1 | -1 ) : Date[] {
+    const tz = opt.timezone ?? 'UTC', count = opt.count ?? 1;
+    const parsed = this.resolve( expr );
+
+    let cur = ( dir === 1 ? opt.after : opt.before ) ?? new Date();
+    const out: Date[] = [];
+
+    for ( let i = 0; i < count; i++ ) {
+      const next = this.step( parsed, cur, tz, dir );
+      if ( ! next ) break;
+
+      out.push( next );
+      cur = new Date( next.getTime() + dir * 60000 );
+    }
+
+    return out;
+  }
+
   /**
    * Compute next N execution times.
    * 
