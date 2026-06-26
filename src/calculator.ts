@@ -26,17 +26,6 @@ export class CronCalculator {
     return typeof input === 'string' ? CronCalculator.parser.parse( input ) : input;
   }
 
-  /** Format a date into timezone-aligned parts. */
-  private format ( tz: string, date: Date ) : Intl.DateTimeFormatPart[] {
-    let formatter = this.formatter.get( tz );
-    if ( ! formatter ) this.formatter.set( tz, formatter = new Intl.DateTimeFormat( 'en-US', {
-      timeZone: tz, year: 'numeric', month: 'numeric', day: 'numeric',
-      hour: 'numeric', minute: 'numeric', hour12: false
-    } ) );
-
-    return formatter.formatToParts( date );
-  }
-
   /** Get number of days in month. */
   private daysInMonth ( year: number, month: number ) : number {
     return new Date( year, month, 0 ).getDate();
@@ -119,27 +108,42 @@ export class CronCalculator {
       ) ) ) ) );
   }
 
+  /** Format a date into timezone-aligned parts. */
+  private toDateTimeParts ( tz: string, date: Date ) : Intl.DateTimeFormatPart[] {
+    let formatter = this.formatter.get( tz );
+    if ( ! formatter ) this.formatter.set( tz, formatter = new Intl.DateTimeFormat( 'en-US', {
+      timeZone: tz, year: 'numeric', month: 'numeric', day: 'numeric',
+      hour: 'numeric', minute: 'numeric', hour12: false
+    } ) );
+
+    return formatter.formatToParts( date );
+  }
+
+  /** Get date time part by key. */
+  private getPart ( parts: Intl.DateTimeFormatPart[], key: string ) : number {
+    return Number( parts.find( p => p.type === key )?.value ?? 0 );
+  }
+
   /** Extract timezone-safe date parts. */
   private parts ( date: Date, tz: string ) : DateParts {
-    const f = this.format( tz, date );
-    const g = ( t: string ) => Number( f.find( p => p.type === t )?.value ?? 0 );
+    const parts = this.toDateTimeParts( tz, date );
 
     return {
-      year: g( 'year' ), month: g( 'month' ), day: g( 'day' ),
-      hour: g( 'hour' ) % 24, minute: g( 'minute' )
+      year: this.getPart( parts, 'year' ), month: this.getPart( parts, 'month' ),
+      day: this.getPart( parts, 'day' ), hour: this.getPart( parts, 'hour' ) % 24,
+      minute: this.getPart( parts, 'minute' )
     };
   }
 
   /** Build UTC Date from timezone-aligned components. */
   private build ( year: number, month: number, day: number, hour: number, minute: number, tz: string ) : Date {
     const base = new Date( Date.UTC( year, month - 1, day, hour, minute ) );
-    const f = this.format( tz, base );
-    const g = ( t: string ) => Number( f.find( p => p.type === t )?.value ?? 0 );
+    const parts = this.toDateTimeParts( tz, base );
 
     return new Date( base.getTime() - (
-      ( g( 'hour' ) - hour ) * 3.6e6 +
-      ( g( 'minute' ) - minute ) * 6e4 +
-      ( g( 'day' ) - day ) * 8.64e7
+      ( this.getPart( parts, 'hour' ) - hour ) * 3.6e6 +
+      ( this.getPart( parts, 'minute' ) - minute ) * 6e4 +
+      ( this.getPart( parts, 'day' ) - day ) * 8.64e7
     ) );
   }
 
