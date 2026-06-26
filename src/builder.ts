@@ -104,9 +104,19 @@ export class CronBuilder {
     return this.next( {}, 'dayOfWeek' );
   }
 
+  /** Set explicit value(s). */
+  public value ( ...values: ( string | number )[] ) : CronBuilder {
+    return this.set( values );
+  }
+
+  /** Set full list (alias for value). */
+  public list ( ...values: ( string | number )[] ) : CronBuilder {
+    return this.set( values );
+  }
+
   /** Output as standard 5-field cron expression string. */
   public toString () : string {
-    return FIELD_NAMES.map( f => this.state[ f ] ).join( ' ' );;
+    return FIELD_NAMES.map( f => this.state[ f ] ).join( ' ' );
   }
 
   /** Output as structured cron object. */
