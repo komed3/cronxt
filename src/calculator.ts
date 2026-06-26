@@ -5,7 +5,7 @@
  */
 
 import { CronParser } from './parser';
-import type { CronInput, RunOptions } from './types';
+import type { CronInput, ParsedCronExpression, RunOptions } from './types';
 
 /** Computes next/previous scheduled run times for cron expressions. */
 export class CronCalculator {
@@ -18,6 +18,11 @@ export class CronCalculator {
   }
 
   private constructor() {}
+
+  /** Resolve string or parsed expression into ParsedCronExpression. */
+  private resolve ( input: CronInput ) : ParsedCronExpression {
+    return typeof input === 'string' ? CronCalculator.parser.parse( input ) : input;
+  }
 
   /**
    * Compute next N execution times.
