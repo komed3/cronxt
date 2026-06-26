@@ -75,7 +75,7 @@ export class CronBuilder {
   /** Clamp a cron field value to its allowed range. */
   private clamp ( value: number ) : number {
     const { min, max } = this.def;
-    return Math.max( Math.max( 1, min ), Math.min( max, value ) );
+    return Math.max( min, Math.min( max, value ) );
   }
 
   /** Build a field expression string. */
