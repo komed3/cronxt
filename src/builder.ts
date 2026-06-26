@@ -11,8 +11,8 @@ import type { CronFieldName, CronObject, CronTuple, SpecialAlias } from './types
 export class CronBuilder {
   private static parser = CronParser.getInstance();
 
-  private readonly fields: CronObject;
-  private readonly current?: CronFieldName;
+  private readonly state: CronObject;
+  private readonly field?: CronFieldName;
 
   /**
    * Create a builder instance from a optional cron expression.
@@ -31,19 +31,19 @@ export class CronBuilder {
       : { ...CRON_DEFAULTS, ...expr } : CRON_DEFAULTS );
   }
 
-  private constructor ( fields: CronObject, current?: CronFieldName ) {
-    this.fields = { ...fields }, this.current = current;
+  private constructor ( state: CronObject, field?: CronFieldName ) {
+    this.state = { ...state }, this.field = field;
   }
 
   public toString () : string {
-    return Object.values( this.fields ).join( ' ' );
+    return Object.values( this.state ).join( ' ' );
   }
 
   public toObject () : CronObject {
-    return this.fields;
+    return this.state;
   }
 
   public toTuple () : CronTuple {
-    return Object.values( this.fields ) as unknown as CronTuple;
+    return Object.values( this.state ) as unknown as CronTuple;
   }
 }
