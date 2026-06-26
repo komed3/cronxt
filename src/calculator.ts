@@ -95,6 +95,17 @@ export class CronCalculator {
       : dayOfMonth.values.has( dom ) && dayOfWeek.values.has( dow );
   }
 
+  /** Validate chronological direction correctness. */
+  private valid ( year: number, month: number, day: number, hour: number, minute: number, p: DateParts, dir: 1 | -1 ) : boolean {
+    return dir === 1
+      ? ( year > p.year || ( year === p.year && ( month > p.month || ( month === p.month && (
+        day > p.day || ( day === p.day && ( hour > p.hour || ( hour === p.hour && minute > p.minute ) ) )
+      ) ) ) ) )
+      : ( year < p.year || ( year === p.year && ( month < p.month || ( month === p.month && (
+        day < p.day || ( day === p.day && ( hour < p.hour || ( hour === p.hour && minute < p.minute ) ) )
+      ) ) ) ) );
+  }
+
   /** Extract timezone-safe date parts. */
   private parts ( date: Date, tz: string ) : DateParts {
     const f = new Intl.DateTimeFormat( 'en-US', {
