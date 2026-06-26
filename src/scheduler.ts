@@ -40,10 +40,12 @@ export class CronScheduler {
 
     let stopped = false, id: ReturnType< typeof setTimeout > | null = null;
 
+    // Emit an event to all registered handlers for that event type
     const emit = ( event: ScheduleEvent, ...args: any[] ) : void => {
       for ( const h of handler[ event ] ) try { h( ...args ) } catch {}
     };
 
+    // Schedule the next occurrence of the cron expression
     const scheduleNext = () : void => {
       if ( stopped ) return;
 
