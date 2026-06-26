@@ -24,6 +24,32 @@ export class CronCalculator {
     return typeof input === 'string' ? CronCalculator.parser.parse( input ) : input;
   }
 
+  /** Binary search: lower bound (first >= x) */
+  private lower ( arr: readonly number[], x: number ) : number {
+    let i = 0, len = arr.length;
+
+    while ( i < len ) {
+      const m = ( i + len ) >> 1;
+      if ( arr[ m ] < x ) i = m + 1;
+      else len = m;
+    }
+
+    return i;
+  }
+
+  /** Binary search: upper bound (last <= x) */
+  private upper ( arr: readonly number[], x: number ) : number {
+    let i = 0, len = arr.length;
+
+    while ( i < len ) {
+      const m = ( i + len ) >> 1;
+      if ( arr[ m ] <= x ) i = m + 1;
+      else len = m;
+    }
+
+    return len - 1;
+  }
+
   /**
    * Returns only the relevant candidates using binary search jumps.
    * No full array scans, no filtering, no allocation loops.
