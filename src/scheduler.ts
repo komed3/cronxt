@@ -4,10 +4,12 @@
  */
 
 import { CronCalculator } from './calculator';
+import { CronParser } from './parser';
 import type { CronInput, EventHandler, ScheduleController, ScheduleEvent, ScheduleOptions } from './types';
 
 /** CronScheduler schedules callbacks to run according to a cron expression. */
 export class CronScheduler {
+  private static readonly parser = CronParser.getInstance();
   private static readonly calculator = CronCalculator.getInstance();
   private static instance?: CronScheduler;
 
