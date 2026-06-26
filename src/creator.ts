@@ -8,6 +8,15 @@ import type { CronObject, CronOptions } from './types';
 
 /** Builds valid cron expression strings from structured options. */
 export class CronCreator {
+  private static instance: CronCreator;
+
+  /** Get the CronCreator instance. */
+  public static getInstance () : CronCreator {
+    return CronCreator.instance ??= new CronCreator();
+  }
+
+  private constructor () {}
+
   /**
    * Create a cron expression string from a partial options object.
    * Omitted fields default to wildcard.

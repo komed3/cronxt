@@ -20,8 +20,8 @@ import { CronParser } from './parser';
 export { CronCalculator, CronCreator, CronParser };
 
 const calculator = new CronCalculator();
-const creator = new CronCreator();
-const parser = new CronParser();
+const creator = CronCreator.getInstance();
+const parser = CronParser.getInstance();
 
 /** Convert a cron expression into a structured CronObject. */
 export const toObject = parser.toObject.bind( parser );

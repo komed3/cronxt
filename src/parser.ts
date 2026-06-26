@@ -19,6 +19,14 @@ import type {
  */
 export class CronParser {
   private static readonly SPLIT = /\s+/;
+  private static instance: CronParser;
+
+  /** Get the CronParser instance. */
+  public static getInstance () : CronParser {
+    return CronParser.instance ??= new CronParser();
+  }
+
+  private constructor () {}
 
   /** Expand a special alias into its 5-field equivalent. */
   private expandAlias ( expression: string ) : string {
