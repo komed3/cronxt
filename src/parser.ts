@@ -56,9 +56,9 @@ export class CronParser {
 
       if ( slashIdx !== -1 ) {
         const stepStr = rangePart.substring( slashIdx + 1 ).trim();
-        step = parseInt( stepStr, 10 );
+        step = Number( stepStr );
 
-        if ( isNaN( step ) || step < 1 )
+        if ( Number.isNaN( step ) || step < 1 )
           throw new Error( `Invalid step "${ stepStr }" in field "${ fieldName }"` );
 
         rangePart = rangePart.substring( 0, slashIdx ).trim();
@@ -93,22 +93,16 @@ export class CronParser {
     return components;
   }
 
-  /** Compute the full set of matching integers from parsed components. */
-  private computeValues ( components: ParsedFieldComponent[] ) : Set< number > {
-    const values = new Set< number >();
+  /** Compute and validate the full set of matching integers from parsed components. */
+  private computeValues ( components: ParsedFieldComponent[], fieldName: CronFieldName ) : Set< number > {
+    const def = FIELD_BY_NAME[ fieldName ], values = new Set< number >();
 
     for ( const comp of components ) for ( let v = comp.start; v <= comp.end; v += comp.step )
-      values.add( v );
+      if ( v < def.min || v > def.max )
+        throw new Error( `Value ${ v } out of range [${ def.min }-${ def.max }] for field "${ fieldName }"` )
+      else values.add( v );
 
     return values;
-  }
-
-  /** Validate that all computed values fall within the field's allowed range. */
-  private validateValues ( values: Set< number >, fieldName: CronFieldName ) : void {
-    const def = FIELD_BY_NAME[ fieldName ];
-
-    for ( const v of values ) if ( v < def.min || v > def.max )
-      throw new Error( `Value ${ v } out of range [${ def.min }-${ def.max }] for field "${ fieldName }"` );
   }
 
   /**
@@ -141,8 +135,7 @@ export class CronParser {
     for ( let i = 0; i < FIELD_COUNT; i++ ) {
       const fieldName = FIELD_NAMES[ i ], token = tokens[ i ];
       const components = this.parseFieldToken( token, fieldName );
-      const values = this.computeValues( components );
-      this.validateValues( values, fieldName );
+      const values = this.computeValues( components, fieldName );
       fields[ fieldName ] = { name: fieldName, components, values };
     }
 
