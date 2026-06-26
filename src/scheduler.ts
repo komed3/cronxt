@@ -90,5 +90,25 @@ export class CronScheduler {
     } else {
       scheduleNext();
     }
+
+    // Create the schedule controller object
+    const controller: ScheduleController = {
+      /** Stop the scheduled job. No further callbacks will fire. */
+      stop,
+
+      /** Register an event handler. */
+      on ( event, handler ) {
+        handlers[ event ].add( handler );
+        return controller;
+      },
+
+      /** Remove an event handler. */
+      off ( event, handler ) {
+        handlers[ event ].delete( handler );
+        return controller;
+      }
+    };
+
+    return controller;
   }
 }
