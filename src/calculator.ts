@@ -121,6 +121,20 @@ export class CronCalculator {
     };
   }
 
+  /** Build UTC Date from timezone-aligned components. */
+  private build ( year: number, month: number, day: number, hour: number, minute: number, tz: string ) : Date {
+    const base = new Date( Date.UTC( year, month - 1, day, hour, minute ) );
+    const f = new Intl.DateTimeFormat( 'en-US', {
+      timeZone: tz, year: 'numeric', month: 'numeric', day: 'numeric',
+      hour: 'numeric', minute: 'numeric', hour12: false
+    } ).formatToParts( base );
+
+    const g = ( t: string) => Number( f.find( p => p.type === t )?.value ?? 0 );
+
+    const diff = ( g( 'hour' ) - hour ) * 3.6e6 + ( g( 'minute' ) - minute ) * 6e4 + ( g( 'day' ) - day ) * 8.64e7;
+    return new Date( base.getTime() - diff );
+  }
+
   /**
    * Core jump-based scheduler.
    * Walks year → month → day → hour → minute using binary search jumps.
