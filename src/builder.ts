@@ -41,6 +41,16 @@ export class CronBuilder {
     return FIELD_BY_NAME[ this.field ];
   }
 
+  /** Create a new builder with updated state. */
+  private clone ( state: Partial< CronObject > = {}, current?: CronFieldName ) : CronBuilder {
+    return new CronBuilder( { ...this.state, ...state }, current ?? this.field );
+  }
+
+  /** Update the current cron field. */
+  private set ( value: string ) : CronBuilder {
+    return this.clone( { [ this.field! ]: value } );
+  }
+
   /** Resolve alias or numeric field value. */
   private resolve ( value: number | string ) : string {
     if ( typeof value === 'number' ) return String( value );
