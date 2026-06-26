@@ -69,6 +69,12 @@ export class CronBuilder {
     return value;
   }
 
+  /** Clamp a cron field value to its allowed range. */
+  private clamp ( value: number ) : number {
+    const { min, max } = this.def;
+    return Math.max( Math.max( 1, min ), Math.min( max, value ) );
+  }
+
   /** Build a field expression string. */
   private buildExpr ( values: ( string | number )[] ) : string {
     return values.map( v => this.resolve( v ) ).join( ',' );
@@ -122,10 +128,10 @@ export class CronBuilder {
   /** Define step expression. */
   public every ( step: number, range?: [ number, number ] ) : CronBuilder {
     if ( step <= 0 ) throw new Error( 'Step must be > 0' );
-    if ( ! range ) return this.set( `*/${ step }` );
+    if ( ! range ) return this.set( `*/${ this.clamp( step ) }` );
 
     const [ from, to ] = range;
-    return this.set( `${ this.validate( from ) }-${ this.validate( to ) }/${ step }` );
+    return this.set( `${ this.validate( from ) }-${ this.validate( to ) }/${ this.clamp( step ) }` );
   }
 
   /** Output as structured cron object. */
