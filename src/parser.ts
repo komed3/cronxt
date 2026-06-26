@@ -19,7 +19,7 @@ import type {
  */
 export class CronParser {
   private static readonly SPLIT = /\s+/;
-  private static instance: CronParser;
+  private static instance?: CronParser;
 
   /** Get the CronParser instance. */
   public static getInstance () : CronParser {
