@@ -35,73 +35,18 @@ export class CronScheduler {
    * job.stop();
    */
   public schedule ( expr: CronInput, callback: () => void, options?: ScheduleOptions ) : ScheduleController {
-    const tz = options?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const parsed = typeof expr === 'string' ? CronScheduler.parser.parse( expr ) : expr;
+    const timezone = options?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
     const handlers: Record< ScheduleEvent, Set< EventHandler > > = {
       tick: new Set(), error: new Set(), stopped: new Set()
     };
 
-    let stopped = false, id: ReturnType< typeof setTimeout > | null = null;
+    let id: ReturnType< typeof setTimeout > | undefined;
+    let stopped = false, cursor = new Date();
 
     // Emit an event to all registered handlers for that event type
-    const emit = ( event: ScheduleEvent, ...args: any[] ) : void => {
+    const emit = ( event: ScheduleEvent, ...args: any[] ) => {
       for ( const h of handlers[ event ] ) try { h( ...args ) } catch {}
     };
-
-    // Schedule the next occurrence of the cron expression
-    const scheduleNext = () : void => {
-      if ( stopped ) return;
-
-      try {
-        const next = CronScheduler.calculator.next( expr, { timezone: tz } );
-        if ( ! next || stopped ) return;
-        const delay = next[ 0 ].getTime() - Date.now();
-
-        if ( delay < 0 ) {
-          // Clock skew / drift - reschedule immediately
-          id = setTimeout( scheduleNext, 1 );
-          return;
-        }
-
-        id = setTimeout( () => {
-          if ( stopped ) return;
-
-          try { emit( 'tick' ), callback() }
-          catch ( err ) { emit( 'error', err ) }
-
-          scheduleNext();
-        }, delay );
-      } catch ( err ) {
-        emit( 'error', err );
-      }
-    };
-
-    // Handle @reboot: fire once immediately
-    if ( typeof expr === 'string' && expr.trim().toLowerCase() === '@reboot' ) {
-      if ( ! stopped ) {
-        try { emit( 'tick' ), callback() }
-        catch ( err ) { emit( 'error', err ) }
-      }
-    } else {
-      scheduleNext();
-    }
-
-    // Create the schedule controller object
-    const controller: ScheduleController = {
-      stop () : void {
-        stopped = true;
-        if ( id !== null ) { clearTimeout( id ), id = null }
-        emit( 'stopped' );
-      },
-      on ( event: ScheduleEvent, handler: EventHandler ) : ScheduleController {
-        handlers[ event ].add( handler );
-        return controller;
-      },
-      off ( event: ScheduleEvent, handler: EventHandler ) : ScheduleController {
-        handlers[ event ].delete( handler );
-        return controller;
-      }
-    };
-
-    return controller;
   }
 }
