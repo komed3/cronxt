@@ -24,6 +24,16 @@ export class CronCalculator {
     return typeof input === 'string' ? CronCalculator.parser.parse( input ) : input;
   }
 
+  /** Get number of days in month. */
+  private daysInMonth ( year: number, month: number ) : number {
+    return new Date( year, month, 0 ).getDate();
+  }
+
+  /** Get the day of week. */
+  private dayOfWeek ( year: number, month: number, day: number ) : number {
+    return new Date( year, month - 1, day ).getDay();
+  }
+
   /** Binary search: lower bound (first >= x). */
   private lower ( arr: readonly number[], x: number ) : number {
     let i = 0, len = arr.length;
@@ -121,7 +131,7 @@ export class CronCalculator {
 
         for ( let di = 0; di < days.length; di++ ) {
           const day = days[ di ];
-          if ( ! this.match( parsed, day, this.dow( year, month, day ) ) ) continue;
+          if ( ! this.match( parsed, day, this.dayOfWeek( year, month, day ) ) ) continue;
 
           const hours = this.pick(
             parsed.fields.hour.sorted, 0, 23, p.hour,
