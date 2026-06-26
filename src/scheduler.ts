@@ -99,5 +99,7 @@ export class CronScheduler {
         return controller;
       }
     };
+
+    return controller;
   }
 }
