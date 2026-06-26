@@ -43,5 +43,32 @@ export class CronScheduler {
     const emit = ( event: ScheduleEvent, ...args: any[] ) : void => {
       for ( const h of handler[ event ] ) try { h( ...args ) } catch {}
     };
+
+    const scheduleNext = () : void => {
+      if ( stopped ) return;
+
+      try {
+        const next = CronScheduler.calculator.next( expr, { timezone: tz } );
+        if ( ! next || stopped ) return;
+        const delay = next[ 0 ].getTime() - Date.now();
+
+        if ( delay < 0 ) {
+          // Clock skew / drift - reschedule immediately
+          id = setTimeout( scheduleNext, 1 );
+          return;
+        }
+
+        id = setTimeout( () => {
+          if ( stopped ) return;
+
+          try { emit( 'tick' ), callback() }
+          catch ( err ) { emit( 'error', err ) }
+
+          scheduleNext();
+        }, delay );
+      } catch ( err ) {
+        emit( 'error', err );
+      }
+    };
   }
 }
