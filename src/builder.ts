@@ -51,8 +51,8 @@ export class CronBuilder {
     return new CronBuilder( { ...this.state, ...state }, current ?? this.field );
   }
 
-  /** Normalize any input into a cron field expression string. */
-  private normalizeValue ( value: string | number ) : string {
+  /** Resolve any input into a cron field expression string. */
+  private resolve ( value: string | number ) : string {
     if ( typeof value === 'number' ) return String( value );
 
     const key = value.toUpperCase(), alias = this.def.aliases[ key ];
@@ -60,7 +60,7 @@ export class CronBuilder {
   }
 
   /** Validate a cron field value against its allowed range. */
-  private validateValue ( value: number ) : number {
+  private validate ( value: number ) : number {
     const { min, max } = this.def;
 
     if ( value < min || value > max )
@@ -71,7 +71,7 @@ export class CronBuilder {
 
   /** Build a field expression string. */
   private buildExpr ( values: ( string | number )[] ) : string {
-    return values.map( v => this.normalizeValue( v ) ).join( ',' );
+    return values.map( v => this.resolve( v ) ).join( ',' );
   }
 
   /** Update the current cron field. */
@@ -116,7 +116,7 @@ export class CronBuilder {
 
   /** Define a range (min -> max). */
   public range ( from: number, to: number ) : CronBuilder {
-    return this.set( `${ this.validateValue( from ) }-${ this.validateValue( to ) }` );
+    return this.set( `${ this.validate( from ) }-${ this.validate( to ) }` );
   }
 
   /** Define step expression. */
@@ -125,7 +125,7 @@ export class CronBuilder {
     if ( ! range ) return this.set( `*/${ step }` );
 
     const [ from, to ] = range;
-    return this.set( `${ this.validateValue( from ) }-${ this.validateValue( to ) }/${ step }` );
+    return this.set( `${ this.validate( from ) }-${ this.validate( to ) }/${ step }` );
   }
 
   /** Output as structured cron object. */
