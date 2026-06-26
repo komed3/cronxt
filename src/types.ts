@@ -101,6 +101,9 @@ export interface ParsedCronExpression {
   source: string;
 }
 
+/** A cron expression string or a pre-parsed expression. */
+export type CronInput = string | ParsedCronExpression;
+
 /** @internal Metadata for a single cron field definition. */
 export interface FieldDefinition {
   readonly name: CronFieldName;
