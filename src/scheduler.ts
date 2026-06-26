@@ -34,7 +34,7 @@ export class CronScheduler {
    */
   public schedule ( expr: CronInput, callback: () => void, options?: ScheduleOptions ) : ScheduleController {
     const tz = options?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const handler: Record< ScheduleEvent, Set< EventHandler > > = {
+    const handlers: Record< ScheduleEvent, Set< EventHandler > > = {
       tick: new Set(), error: new Set(), stopped: new Set()
     };
 
@@ -42,7 +42,7 @@ export class CronScheduler {
 
     // Emit an event to all registered handlers for that event type
     const emit = ( event: ScheduleEvent, ...args: any[] ) : void => {
-      for ( const h of handler[ event ] ) try { h( ...args ) } catch {}
+      for ( const h of handlers[ event ] ) try { h( ...args ) } catch {}
     };
 
     // Schedule the next occurrence of the cron expression
@@ -82,5 +82,22 @@ export class CronScheduler {
     } else {
       scheduleNext();
     }
+
+    // Create the schedule controller object
+    const controller: ScheduleController = {
+      stop () : void {
+        stopped = true;
+        if ( id !== null ) { clearTimeout( id ), id = null }
+        emit( 'stopped' );
+      },
+      on ( event: ScheduleEvent, handler: EventHandler ) : ScheduleController {
+        handlers[ event ].add( handler );
+        return controller;
+      },
+      off ( event: ScheduleEvent, handler: EventHandler ) : ScheduleController {
+        handlers[ event ].delete( handler );
+        return controller;
+      }
+    };
   }
 }

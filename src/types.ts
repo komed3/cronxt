@@ -60,9 +60,9 @@ export interface ScheduleController {
   /** Stop the scheduled job. No further callbacks will fire. */
   stop () : void;
   /** Register an event handler. */
-  on ( event: ScheduleEvent, handler: ( ...args: any[] ) => void ) : ScheduleController;
+  on ( event: ScheduleEvent, handler: EventHandler ) : ScheduleController;
   /** Remove an event handler. */
-  off ( event: ScheduleEvent, handler: ( ...args: any[] ) => void ) : ScheduleController;
+  off ( event: ScheduleEvent, handler: EventHandler ) : ScheduleController;
 }
 
 /** A parsed range or value with an optional step size. */
