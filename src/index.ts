@@ -15,13 +15,15 @@ export type {
 import { CronCalculator } from './calculator';
 import { CronCreator } from './creator';
 import { CronParser } from './parser';
+import { CronScheduler } from './scheduler';
 
 /** Export classes. */
-export { CronCalculator, CronCreator, CronParser };
+export { CronCalculator, CronCreator, CronParser, CronScheduler };
 
 const calculator = CronCalculator.getInstance();
 const creator = CronCreator.getInstance();
 const parser = CronParser.getInstance();
+const scheduler = CronScheduler.getInstance();
 
 /** Convert a cron expression into a structured CronObject. */
 export const toObject = parser.toObject.bind( parser );
@@ -49,7 +51,7 @@ export const prev = calculator.prev.bind( calculator );
 
 /** Export the nxtcron object containing all instances and methods. */
 export const nxtcron = {
-  calculator, creator, parser, toObject, parse, validate,
+  calculator, creator, parser, scheduler, toObject, parse, validate,
   fromObject, fromTuple, create, next, prev
 }
 
