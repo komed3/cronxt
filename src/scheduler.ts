@@ -37,5 +37,11 @@ export class CronScheduler {
     const handler: Record< ScheduleEvent, Set< EventHandler > > = {
       tick: new Set(), error: new Set(), stopped: new Set()
     };
+
+    let stopped = false, id: ReturnType< typeof setTimeout > | null = null;
+
+    const emit = ( event: ScheduleEvent, ...args: any[] ) : void => {
+      for ( const h of handler[ event ] ) try { h( ...args ) } catch {}
+    };
   }
 }
