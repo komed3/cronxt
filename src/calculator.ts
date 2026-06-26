@@ -90,12 +90,10 @@ export class CronCalculator {
 
   /** Cron day matching logic (DOM + DOW semantics). */
   private match ( parsed: ParsedCronExpression, dom: number, dow: number ) : boolean {
-    const { dayOfMonth, dayOfWeek } = parsed.fields;
+    const { dayOfMonth: d, dayOfWeek: w } = parsed.fields;
 
-    return dayOfMonth.wildcard && dayOfWeek.wildcard ? true
-      : dayOfMonth.wildcard ? dayOfWeek.values.has( dow )
-      : dayOfWeek.wildcard ? dayOfMonth.values.has( dom )
-      : dayOfMonth.values.has( dom ) || dayOfWeek.values.has( dow );
+    return d.wildcard && w.wildcard ? true : d.wildcard ? w.values.has( dow )
+      : w.wildcard ? d.values.has( dom ) : d.values.has( dom ) || w.values.has( dow );
   }
 
   /** Validate chronological direction correctness. */
