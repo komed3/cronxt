@@ -34,4 +34,16 @@ export class CronBuilder {
   private constructor ( fields: CronObject, current?: CronFieldName ) {
     this.fields = { ...fields }, this.current = current;
   }
+
+  public toString () : string {
+    return Object.values( this.fields ).join( ' ' );
+  }
+
+  public toObject () : CronObject {
+    return this.fields;
+  }
+
+  public toTuple () : CronTuple {
+    return Object.values( this.fields ) as unknown as CronTuple;
+  }
 }
