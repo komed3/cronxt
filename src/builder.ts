@@ -76,7 +76,7 @@ export class CronBuilder {
 
   /** Update the current cron field. */
   private set ( values: ( string | number )[] ) : CronBuilder {
-    return this.next( { [ this.requireField() ]: this.buildExpr( values ) } );
+    return this.next( { [ this.requireField() ] : this.buildExpr( values ) } );
   }
 
   /** Select the minute field. */
@@ -114,10 +114,21 @@ export class CronBuilder {
     return this.set( values );
   }
 
-  /** Define a range (min → max). */
+  /** Define a range (min -> max). */
   public range ( from: number, to: number ) : CronBuilder {
     return this.next( { [ this.requireField() ] :
       `${ this.validateValue( from ) }-${ this.validateValue( to ) }`
+    } );
+  }
+
+  /** Define step expression. */
+  public every ( step: number, range?: [ number, number ] ) : CronBuilder {
+    if ( step <= 0 ) throw new Error( 'Step must be > 0' );
+    if ( ! range ) return this.next( { [ this.requireField() ] : `*/${ step }` } );
+
+    const [ from, to ] = range;
+    return this.next( { [ this.requireField() ] :
+      `${ this.validateValue( from ) }-${ this.validateValue( to ) }/${ step }`
     } );
   }
 
