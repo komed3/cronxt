@@ -55,8 +55,11 @@ export class CronBuilder {
   private resolve ( value: string | number ) : string {
     if ( typeof value === 'number' ) return String( value );
 
-    const key = value.toUpperCase(), alias = this.def.aliases[ key ];
-    return alias !== undefined ? String( alias ) : key;
+    const alias = this.def.aliases[ value.toUpperCase() ];
+    if ( alias === undefined )
+      throw new Error( `Invalid value for "${ this.requireField() }"` );
+
+    return String( alias );
   }
 
   /** Validate a cron field value against its allowed range. */
@@ -64,7 +67,7 @@ export class CronBuilder {
     const { min, max } = this.def;
 
     if ( value < min || value > max )
-      throw new Error( `Invalid value ${ value } for ${ this.requireField() } (${ min }-${ max })` );
+      throw new Error( `Value ${ value } out of range [${ min }-${ max }] for "${ this.requireField() }"` );
 
     return value;
   }
