@@ -1,6 +1,6 @@
 /**
  * CronBuilder
- * Builds cron expressions using a immutable fluent design.
+ * Create a cron expression using a immutable fluent builder.
  */
 
 import { CRON_DEFAULTS } from './const';
