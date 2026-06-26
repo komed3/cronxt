@@ -59,6 +59,16 @@ export class CronBuilder {
     return alias !== undefined ? String( alias ) : key;
   }
 
+  /** Validate a cron field value against its allowed range. */
+  private validateValue ( value: number ) : number {
+    const { min, max } = this.def;
+
+    if ( value < min || value > max )
+      throw new Error( `Invalid value ${ value } for ${ this.requireField() } (${ min }-${ max })` );
+
+    return value;
+  }
+
   /** Select the minute field. */
   public minute () : CronBuilder {
     return this.next( {}, 'minute' );
