@@ -151,26 +151,26 @@ export class CronCalculator {
    * Walks year → month → day → hour → minute using binary search jumps.
    */
   private step ( parsed: ParsedCronExpression, from: Date, tz: string, dir: 1 | -1 ) : Date | null {
-    const p = this.parts( from, tz );
+    const c = this.parts( from, tz );
 
-    for ( let year = p.year; dir === 1 ? year <= p.year + 4 : year >= p.year - 4; year += dir ) {
-      const months = this.pick( parsed.fields.month.sorted, 1, 12, p.month, year === p.year, dir );
-      if ( ! months.length ) return null;
+    for ( let year = c.year; dir === 1 ? year <= c.year + 99 : year >= c.year - 99; year += dir ) {
+      const months = this.pick( parsed.fields.month.sorted, 1, 12, c.month, year === c.year, dir );
+      if ( ! months.length ) continue;
 
       for ( let mi = 0; mi < months.length; mi++ ) {
-        const month = months[ mi ], maxDay = this.daysInMonth( year, month ), days = this.pick(
-          parsed.fields.dayOfMonth.sorted, 1, maxDay, p.day, year === p.year && month === p.month, dir
+        const month = months[ mi ], maxDay = this.DOM( year, month ), days = this.pick(
+          parsed.fields.dayOfMonth.sorted, 1, maxDay, c.day, year === c.year && month === c.month, dir
         );
 
         if ( ! days.length ) continue;
 
         for ( let di = 0; di < days.length; di++ ) {
           const day = days[ di ];
-          if ( ! this.match( parsed, day, this.dayOfWeek( year, month, day ) ) ) continue;
+          if ( ! this.match( parsed, day, this.DOW( year, month, day ) ) ) continue;
 
           const hours = this.pick(
-            parsed.fields.hour.sorted, 0, 23, p.hour,
-            year === p.year && month === p.month && day === p.day,
+            parsed.fields.hour.sorted, 0, 23, c.hour,
+            year === c.year && month === c.month && day === c.day,
             dir
           );
 
@@ -178,15 +178,15 @@ export class CronCalculator {
 
           for ( let hi = 0; hi < hours.length; hi++ ) {
             const hour = hours[ hi ], minutes = this.pick(
-              parsed.fields.minute.sorted, 0, 59, p.minute,
-              year === p.year && month === p.month && day === p.day && hour === p.hour,
+              parsed.fields.minute.sorted, 0, 59, c.minute,
+              year === c.year && month === c.month && day === c.day && hour === c.hour,
               dir
             );
 
             for ( let mi2 = 0; mi2 < minutes.length; mi2++ ) {
               const minute = minutes[ mi2 ];
 
-              if ( this.valid( year, month, day, hour, minute, p, dir ) )
+              if ( this.valid( year, month, day, hour, minute, c, dir ) )
                 return this.build( year, month, day, hour, minute, tz );
             }
           }
