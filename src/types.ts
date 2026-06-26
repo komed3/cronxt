@@ -73,7 +73,7 @@ export interface ParsedFieldComponent {
   step: number;
 }
 
-/** A parsed cron field with its components and computed value set. */
+/** A parsed cron field with pre-computed metadata. */
 export interface ParsedField {
   /** Name of the cron field. */
   name: CronFieldName;
@@ -81,6 +81,14 @@ export interface ParsedField {
   components: ReadonlyArray< ParsedFieldComponent >;
   /** All matching values for this field. */
   values: ReadonlySet< number >;
+  /** Sorted matching values in ascending order. */
+  sorted: ReadonlyArray< number >;
+  /** Smallest matching value. */
+  min: number;
+  /** Largest matching value. */
+  max: number;
+  /** Whether all possible values of this field are allowed. */
+  wildcard: boolean;
 }
 
 /** A fully parsed cron expression. */
