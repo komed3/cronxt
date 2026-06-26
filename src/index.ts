@@ -49,10 +49,13 @@ export const next = calculator.next.bind( calculator );
 /** Get previous scheduled run(s) before a reference date. */
 export const prev = calculator.prev.bind( calculator );
 
+/** Schedule a callback to run on the given cron schedule. Returns a controller with stop(), on(), off(). */
+export const schedule = scheduler.schedule.bind( scheduler );
+
 /** Export the nxtcron object containing all instances and methods. */
 export const nxtcron = {
   calculator, creator, parser, scheduler, toObject, parse, validate,
-  fromObject, fromTuple, create, next, prev
+  fromObject, fromTuple, create, next, prev, schedule
 }
 
 /** Default export the nxtcron object. */
