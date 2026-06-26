@@ -1,5 +1,5 @@
 /**
- * ntxcron
+ * nxtcron
  * A lightweight, zero-dependency cron expression parser and scheduler.
  * 
  * @author Paul Köhler (komed3)
@@ -35,7 +35,11 @@ export const validate = parser.validate.bind( parser );
 /** Create a cron expression string from a partial options object. Omitted fields default to wildcard. */
 export const fromObject = creator.fromObject.bind( creator );
 
-export default ( {
+/** Export the nxtcron object containing all instances and methods. */
+export const nxtcron = {
   calculator, creator, parser,
   toObject, parse, validate, fromObject
-} ) as const;
+}
+
+/** Default export the nxtcron object. */
+export default nxtcron;
