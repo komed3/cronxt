@@ -20,6 +20,13 @@ import type {
 export class CronParser {
   private static readonly SPLIT = /\s+/;
 
+  /** Expand a special alias into its 5-field equivalent. */
+  private expandAlias ( expression: string ) : string {
+    const trimmed = expression.trim().toLowerCase();
+    if ( trimmed in SPECIAL_ALIASES ) return SPECIAL_ALIASES[ trimmed as SpecialAlias ];
+    return expression.trim();
+  }
+
   /** Split a cron expression string into its five field tokens. */
   private splitFields ( expression: string ) : CronTuple {
     const parts = expression.trim().split( CronParser.SPLIT );
@@ -30,22 +37,11 @@ export class CronParser {
     return parts as unknown as CronTuple;
   }
 
-  /** Expand a special alias into its 5-field equivalent. */
-  private expandAlias ( expression: string ) : string {
-    const trimmed = expression.trim().toLowerCase();
-    if ( trimmed in SPECIAL_ALIASES ) return SPECIAL_ALIASES[ trimmed as SpecialAlias ];
-    return expression.trim();
-  }
-
   /** Expand a named alias (e.g. JAN) to its numeric value for the given field. */
-  private resolveAlias ( token: string, fieldName: CronFieldName ) : string {
-    const def = FIELD_BY_NAME[ fieldName ];
-    if ( ! def ) return token;
-
-    const upper = token.toUpperCase();
-    if ( def.aliases[ upper ] !== undefined ) return String( def.aliases[ upper ] );
-
-    return token;
+  private resolveAlias ( token: string, fieldName: CronFieldName ) : number | string {
+    const aliases = FIELD_BY_NAME[ fieldName ].aliases;
+    const alias = aliases[ token.toUpperCase() ];
+    return alias === undefined ? token : alias;
   }
 
   /** Parse a single field token into components. */
@@ -79,15 +75,15 @@ export class CronParser {
 
         const resolvedStart = this.resolveAlias( parts[ 0 ].trim(), fieldName );
         const resolvedEnd = this.resolveAlias( parts[ 1 ].trim(), fieldName );
-        start = parseInt( resolvedStart, 10 ), end = parseInt( resolvedEnd, 10 );
+        start = Number( resolvedStart ), end = Number( resolvedEnd );
 
-        if ( isNaN( start ) || isNaN( end ) )
+        if ( Number.isNaN( start ) || Number.isNaN( end ) )
           throw new Error( `Non-numeric range "${ rangePart }" in field "${ fieldName }"` );
       } else {
         const resolved = this.resolveAlias( rangePart.trim(), fieldName );
-        start = parseInt( resolved, 10 ), end = start;
+        start = Number( resolved ), end = start;
 
-        if ( isNaN( start ) )
+        if ( Number.isNaN( start ) )
           throw new Error( `Non-numeric value "${ rangePart }" in field "${ fieldName }"` );
       }
 
