@@ -48,5 +48,12 @@ export class CronScheduler {
     const emit = ( event: ScheduleEvent, ...args: any[] ) => {
       for ( const h of handlers[ event ] ) try { h( ...args ) } catch {}
     };
+
+    // Stop scheduled events immediately
+    const stop = () => {
+      if ( stopped ) return; stopped = true;
+      if ( id !== undefined ) clearTimeout( id ), id = undefined;
+      emit( 'stopped' );
+    };
   }
 }
