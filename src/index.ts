@@ -19,7 +19,7 @@ import { CronParser } from './parser';
 /** Export classes. */
 export { CronCalculator, CronCreator, CronParser };
 
-const calculator = new CronCalculator();
+const calculator = CronCalculator.getInstance();
 const creator = CronCreator.getInstance();
 const parser = CronParser.getInstance();
 

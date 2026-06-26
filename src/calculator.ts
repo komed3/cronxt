@@ -4,21 +4,21 @@
  * Uses Intl.DateTimeFormat for all timezone handling (zero external deps).
  */
 
-import { WEEKDAY_MAP } from './const';
+import { FIELD_BY_NAME } from './const';
 import { CronParser } from './parser';
 import type { DateParts } from './types';
 
-/**
- * Computes next/previous scheduled run times for cron expressions.
- * 
- * @example
- * const calc = new CronCalculator();
- * calc.getNextRun( '0 9 * * MON', { timezone: 'America/New_York' } );
- * calc.getNextRuns( '0 9 * * 1-5', { after: new Date(), count: 5 } );
- */
+/** Computes next/previous scheduled run times for cron expressions. */
 export class CronCalculator {
-  private readonly parser: CronParser;
-  constructor() { this.parser = new CronParser() }
+  private static readonly parser = CronParser.getInstance();
+  private static instance?: CronCalculator;
+
+  /** Get the CronCalculator instance. */
+  public static getInstance () : CronCalculator {
+    return this.instance ??= new CronCalculator();
+  }
+
+  private constructor() {}
 
   /** Create a Date shifted by a given number of minutes. */
   private shiftDateByMinutes ( date: Date, minutes: number ) : Date {
@@ -39,8 +39,9 @@ export class CronCalculator {
     const int = ( type: string ) : number => parseInt( get( type ), 10 );
 
     return {
-      year: int( 'year' ), month: int( 'month' ), dayOfMonth: int( 'day' ), hour: int( 'hour' ) % 24,
-      minute: int( 'minute' ), dayOfWeek: WEEKDAY_MAP[ get( 'weekday' ) ] ?? 0
+      year: int( 'year' ), month: int( 'month' ), dayOfMonth: int( 'day' ),
+      hour: int( 'hour' ) % 24, minute: int( 'minute' ),
+      dayOfWeek: FIELD_BY_NAME.dayOfWeek.aliases[ get( 'weekday' ).toUpperCase() ] ?? 0
     };
   }
 
