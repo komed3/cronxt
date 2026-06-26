@@ -36,6 +36,8 @@ export interface CronOptions extends Partial< CronObject > {}
 
 /** Options for next/previous run calculations. */
 export interface RunOptions {
+  /** Number of runs to return. Defaults to 1. */
+  count?: number;
   /** IANA timezone string (e.g. 'America/New_York'). Defaults to UTC. */
   timezone?: string;
   /** Reference date after which to find the next run. Defaults to now. */
