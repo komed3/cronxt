@@ -51,17 +51,12 @@ export class CronBuilder {
     return new CronBuilder( { ...this.state, ...state }, current ?? this.field );
   }
 
-  /** Update the current cron field. */
-  private set ( value: string ) : CronBuilder {
-    return this.next( { [ this.requireField() ]: value } );
-  }
+  /** Normalize any input into a cron field expression string. */
+  private normalize ( input: string | number ) : string {
+    if ( typeof input === 'number' ) return String( input );
 
-  /** Resolve alias or numeric field value. */
-  private resolve ( value: number | string ) : string {
-    if ( typeof value === 'number' ) return String( value );
-
-    const alias = this.def.aliases[ value.toUpperCase() ];
-    return alias === undefined ? value.toUpperCase() : value.toUpperCase();
+    const key = input.toUpperCase(), alias = this.def.aliases[ key ];
+    return alias !== undefined ? String( alias ) : key;
   }
 
   /** Select the minute field. */
