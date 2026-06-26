@@ -69,7 +69,7 @@ export class CronCalculator {
   private pick ( arr: readonly number[], min: number, max: number, cur: number, lvl: boolean, dir: 1 | -1 ) : readonly number[] {
     if ( ! arr.length ) return [];
 
-    const start = lvl ? ( dir === 1 ? cur + 1 : cur - 1 ) : ( dir === 1 ? min : max );
+    const start = lvl ? cur : ( dir === 1 ? min : max );
     const idx = dir === 1 ? this.lower( arr, start ) : this.upper( arr, start );
     const out: number[] = [];
 
