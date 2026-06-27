@@ -200,6 +200,7 @@ export class CronCalculator {
   /** Shared execution loop for next/prev. */
   private run ( expr: CronInput, opt: RunOptions, dir: 1 | -1 ) : Date[] {
     const tz = opt.timezone ?? 'UTC', count = opt.count ?? 1;
+    const limit = dir === 1 ? opt.before?.getTime() : opt.after?.getTime();
     const parsed = this.resolve( expr );
 
     let cur = ( dir === 1 ? opt.after : opt.before ) ?? new Date();
@@ -207,10 +208,11 @@ export class CronCalculator {
 
     for ( let i = 0; i < count; i++ ) {
       const next = this.step( parsed, cur, tz, dir );
-      if ( ! next || ( out.length && next.getTime() === cur.getTime() ) ) break;
 
-      out.push( next );
-      cur = next;
+      if ( ! next || ( out.length && next.getTime() === cur.getTime() ) ) break;
+      if ( limit && ( dir === 1 ? next.getTime() > limit : next.getTime() < limit ) ) break;
+
+      out.push( next ), cur = next;
     }
 
     return out;
@@ -220,7 +222,7 @@ export class CronCalculator {
    * Compute next N execution times.
    * 
    * @param expr - Cron string or pre-parsed expression
-   * @param options - Run options (timezone, after, count)
+   * @param options - Run options (timezone, before, after, count)
    * 
    * @example
    * calc.next( '0 9 * * MON', { count: 3, timezone: 'UTC' } );
@@ -233,7 +235,7 @@ export class CronCalculator {
    * Compute previous N execution times.
    * 
    * @param expr - Cron string or pre-parsed expression
-   * @param options - Run options (timezone, before, count)
+   * @param options - Run options (timezone, before, after, count)
    * 
    * @example
    * calc.prev( '0 9 * * MON', { count: 3 } );
