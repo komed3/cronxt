@@ -46,4 +46,15 @@ test( 'leap year', () => {
   expect( next( '0 0 29 FEB *', after( '2026-06-26T00:00:00Z' ) )[ 0 ].toISOString() ).toBe( '2028-02-29T00:00:00.000Z' );
 } );
 
+test( 'multiple results', () => {
+  expect( next( '*/30 * * * *', {
+    ...after( '2026-06-26T18:15:00Z' ),
+    count: 3
+  } ).map( d => d.toISOString() ) ).toEqual( [
+    '2026-06-26T18:30:00.000Z',
+    '2026-06-26T19:00:00.000Z',
+    '2026-06-26T19:30:00.000Z'
+  ] );
+} );
+
 summary();
