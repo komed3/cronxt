@@ -4,16 +4,28 @@
   "license": "MIT",
   "version": "1.0.0",
   "author": {
-    "name": "komed3 (Paul Köhler)",
+    "name": "Paul Köhler (komed3)",
     "email": "webmaster@komed3.de",
     "url": "https://komed3.de"
   },
   "keywords": [
     "cron",
+    "crontab",
+    "cronjob",
+    "cron-job",
+    "cron-expression",
     "cron-parser",
     "cron-builder",
+    "cron-validator",
+    "cron-scheduler",
+    "schedule",
     "scheduler",
-    "typescript"
+    "parser",
+    "builder",
+    "typescript",
+    "javascript",
+    "node",
+    "browser"
   ],
   "repository": {
     "type": "git",
