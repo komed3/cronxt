@@ -26,6 +26,9 @@ const creator = CronCreator.getInstance();
 const parser = CronParser.getInstance();
 const scheduler = CronScheduler.getInstance();
 
+/** Export instances. */
+export { calculator, creator, parser, scheduler };
+
 /** Create a cron expression using a immutable fluent builder. */
 export const build = CronBuilder.create;
 
