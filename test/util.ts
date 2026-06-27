@@ -20,3 +20,28 @@ export function test ( name: string, fn: () => void ) : void {
     console.error( err );
   }
 }
+
+/** Create an expectation wrapper. */
+export function expect < T > ( actual: T ) {
+  return {
+    /** Assert strict equality. */
+    toBe ( expected: T ) : void {
+      if ( actual !== expected )
+        throw new Error( `Expected ${ expected }, received ${ actual }` );
+    },
+
+    /** Assert deep equality. */
+    toEqual ( expected: T ) : void {
+      if ( JSON.stringify( actual ) !== JSON.stringify( expected ) )
+        throw new Error( `Expected ${ JSON.stringify( expected ) }, received ${ JSON.stringify( actual ) }` );
+    },
+
+    /** Assert function throws. */
+    toThrow () : void {
+      try { ( actual as unknown as () => void )() }
+      catch { return }
+
+      throw new Error( 'Expected function to throw.' );
+    }
+  };
+}
