@@ -3,7 +3,6 @@
     "target": "ESNext",
     "moduleResolution": "bundler",
     "lib": [ "DOM", "ESNext", "ESNext.Intl" ],
-    "types": [ "node" ],
     "declaration": false,
     "declarationMap": false,
     "sourceMap": false,

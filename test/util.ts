@@ -17,7 +17,7 @@ export function test ( name: string, fn: () => void ) : void {
     console.error( `✗ ${ name }` );
     console.error( err );
   } finally {
-    console.log(`✓ ${ name } (${ ( performance.now() - t ).toFixed( 2 ) } ms)` );
+    console.log( `✓ ${ name } (${ ( performance.now() - t ).toFixed( 2 ) } ms)` );
   }
 }
 
