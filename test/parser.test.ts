@@ -1,5 +1,5 @@
-import { expect, summary, test } from './util';
 import { parse, toObject, toTuple, validate } from '../src';
+import { expect, summary, test } from './util';
 
 console.log( '=== PARSER ===' );
 

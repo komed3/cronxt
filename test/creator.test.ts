@@ -1,5 +1,5 @@
-import { expect, summary, test } from './util';
 import { create, fromObject, fromTuple } from '../src';
+import { expect, summary, test } from './util';
 
 console.log( '=== CREATOR ===' );
 
