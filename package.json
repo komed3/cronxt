@@ -8,6 +8,7 @@
     "email": "webmaster@komed3.de",
     "url": "https://komed3.de"
   },
+  "homepage": "https://komed3.github.io/nxtcron",
   "keywords": [
     "cron",
     "crontab",
