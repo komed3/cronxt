@@ -1,6 +1,11 @@
 /**
  * nxtcron
- * A lightweight, zero-dependency cron expression parser and scheduler.
+ * A lightweight, zero-dependency toolkit for creating, parsing, validating,
+ * scheduling, and calculating cron expressions.
+ * 
+ * Designed for both browser and Node.js environments, nxtcron provides a
+ * modern, immutable, fast and fully typed API while remaining compact
+ * enough for production use.
  * 
  * @author Paul Köhler (komed3)
  * @version 1.0.0
