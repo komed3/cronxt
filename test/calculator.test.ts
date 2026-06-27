@@ -26,4 +26,20 @@ test( 'day overflow', () => {
   expect( next( '0 0 * * *', after( '2026-06-26T23:59:59Z' ) )[ 0 ].toISOString() ).toBe( '2026-06-27T00:00:00.000Z' );
 } );
 
+test( 'month overflow', () => {
+  expect( next( '0 0 1 * *', after( '2026-06-30T23:59:59Z' ) )[ 0 ].toISOString() ).toBe( '2026-07-01T00:00:00.000Z' );
+} );
+
+test( 'year overflow', () => {
+  expect( next( '0 0 1 JAN *', after( '2026-12-31T23:59:59Z' ) )[ 0 ].toISOString() ).toBe( '2027-01-01T00:00:00.000Z' );
+} );
+
+test( 'weekday only', () => {
+  expect( next( '15 10 * * MON', after( '2026-06-26T18:00:00Z' ) )[ 0 ].toISOString() ).toBe( '2026-06-29T10:15:00.000Z' );
+} );
+
+test( 'month aliases', () => {
+  expect( next( '0 0 1 JAN,DEC *', after( '2026-06-26T00:00:00Z' ) )[ 0 ].toISOString() ).toBe( '2026-12-01T00:00:00.000Z' );
+} );
+
 summary();
