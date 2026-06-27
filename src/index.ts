@@ -10,7 +10,6 @@
  * without additional transformations.
  * 
  * @author Paul Köhler (komed3)
- * @version 1.0.0
  * @license MIT
  */
 
