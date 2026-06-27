@@ -24,7 +24,7 @@ import { CronCreator } from './creator';
 import { CronParser } from './parser';
 import { CronScheduler } from './scheduler';
 
-/** Export classes. */
+/** Export all core library classes. */
 export { CronBuilder, CronCalculator, CronCreator, CronParser, CronScheduler };
 
 const calculator = CronCalculator.getInstance();
@@ -32,50 +32,54 @@ const creator = CronCreator.getInstance();
 const parser = CronParser.getInstance();
 const scheduler = CronScheduler.getInstance();
 
-/** Export instances. */
+/** Export shared singleton instances. */
 export { calculator, creator, parser, scheduler };
 
-/** Create a cron expression using a immutable fluent builder. */
+/** Create cron expressions using the immutable fluent builder API. */
 export const build = CronBuilder.create;
 
-/** Convert a cron expression into a ordered CronTuple. */
+/** Convert a cron expression into an ordered CronTuple. */
 export const toTuple = parser.toTuple.bind( parser );
 
 /** Convert a cron expression into a structured CronObject. */
 export const toObject = parser.toObject.bind( parser );
 
-/** Parse a cron expression into a fully validated internal representation. */
+/** Parse and fully validate a cron expression. */
 export const parse = parser.parse.bind( parser );
 
-/** Validate a cron expression without throwing. Returns true or false. */
+/** Check whether a cron expression is syntactically valid without throwing. */
 export const validate = parser.validate.bind( parser );
 
-/** Create a cron expression string from a cron field tuple. */
+/** Create a cron expression from an ordered field tuple. */
 export const fromTuple = creator.fromTuple.bind( creator );
 
-/** Create a cron expression string from a partial options object. Omitted fields default to wildcard. */
+/** Create a cron expression from a partial cron object. Missing fields default to wildcards. */
 export const fromObject = creator.fromObject.bind( creator );
 
-/** Create a cron expression string from individual field values. Omitted fields default to wildcard. */
+/** Create a cron expression from individual field values. Missing fields default to wildcards. */
 export const create = creator.create.bind( creator );
 
-/** Get next scheduled run(s) after a reference date. */
+/** Calculate the next scheduled execution time(s). */
 export const next = calculator.next.bind( calculator );
 
-/** Get previous scheduled run(s) before a reference date. */
+/** Calculate the previous scheduled execution time(s). */
 export const prev = calculator.prev.bind( calculator );
 
-/** Schedule a callback to run on the given cron schedule. Returns a controller with stop(), on(), off(). */
+/** Schedule recurring executions using a cron expression. */
 export const schedule = scheduler.schedule.bind( scheduler );
 
-/** Export the nxtcron object containing all instances and methods. */
+/**
+ * Immutable namespace exposing the complete public nxtcron API,
+ * including classes, singleton instances, and convenience helpers.
+ */
 export const nxtcron = Object.freeze( {
   CronBuilder, CronCalculator, CronCreator, CronParser, CronScheduler,
 
   calculator, creator, parser, scheduler,
 
-  build, toTuple, toObject, parse, validate, fromTuple, fromObject, create, next, prev, schedule
+  build, toTuple, toObject, parse, validate, fromTuple, fromObject,
+  create, next, prev, schedule
 } );
 
-/** Default export the nxtcron object. */
+/** Default export of the complete nxtcron API namespace. */
 export default nxtcron;
