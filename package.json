@@ -1,6 +1,6 @@
 {
   "name": "nxtcron",
-  "description": "Lightweight, zero-dependency cron expression parser, validator, and scheduler written in TypeScript",
+  "description": "Lightweight, zero-dependency toolkit for creating, parsing, validating, scheduling, and calculating cron expressions",
   "license": "MIT",
   "version": "1.0.0",
   "author": {
@@ -11,10 +11,9 @@
   "keywords": [
     "cron",
     "cron-parser",
+    "cron-builder",
     "scheduler",
-    "typescript",
-    "zero-dependency",
-    "lightweight"
+    "typescript"
   ],
   "repository": {
     "type": "git",
