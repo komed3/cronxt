@@ -63,10 +63,13 @@ export const prev = calculator.prev.bind( calculator );
 export const schedule = scheduler.schedule.bind( scheduler );
 
 /** Export the nxtcron object containing all instances and methods. */
-export const nxtcron = {
-  calculator, creator, parser, scheduler, build, toTuple, toObject, parse,
-  validate, fromTuple, fromObject, create, next, prev, schedule
-}
+export const nxtcron = Object.freeze( {
+  CronBuilder, CronCalculator, CronCreator, CronParser, CronScheduler,
+
+  calculator, creator, parser, scheduler,
+
+  build, toTuple, toObject, parse, validate, fromTuple, fromObject, create, next, prev, schedule
+} );
 
 /** Default export the nxtcron object. */
 export default nxtcron;
