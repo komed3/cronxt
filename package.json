@@ -2,7 +2,7 @@
   "name": "nxtcron",
   "description": "Lightweight, zero-dependency toolkit for building, parsing, validating, scheduling and calculating cron expressions.",
   "license": "MIT",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": {
     "name": "Paul Köhler (komed3)",
     "email": "webmaster@komed3.de",
