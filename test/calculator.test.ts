@@ -116,8 +116,20 @@ test( 'DST transition', () => {
 } );
 
 test( 'stress tests', () => {
-  expect( next( '*/3 2-23 * * MON-FRI', { count: 10000 } ).length ).toBe( 10000 );
-  expect( prev( '0 0 1 1 *', { count: 10000 } ).length ).toBe( 10000 );
+  const n = next( '*/3 2-23 * * MON-FRI', { count: 10000 } );
+  expect( n.length ).toBe( 10000 );
+  for ( let i = 1; i < n.length; i++ )
+    expect( n[ i ].getTime() > n[ i - 1 ].getTime() ).toBe( true );
+
+  const p = prev( '*/7 3-18 * * SAT,SUN', { count: 10000 } );
+  expect( p.length ).toBe( 10000 );
+  for ( let i = 1; i < p.length; i++ )
+    expect( p[ i ].getTime() < p[ i - 1 ].getTime() ).toBe( true );
+
+  for ( let i = 0; i < 10000; i++ )
+    expect( prev( '*/15 * * * *', { before: new Date(
+      Date.UTC( 2026, 5, 26, 18, i % 60 )
+    ) } ).length ).toBe( 1 );
 } );
 
 summary();
