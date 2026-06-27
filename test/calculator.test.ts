@@ -42,4 +42,8 @@ test( 'month aliases', () => {
   expect( next( '0 0 1 JAN,DEC *', after( '2026-06-26T00:00:00Z' ) )[ 0 ].toISOString() ).toBe( '2026-12-01T00:00:00.000Z' );
 } );
 
+test( 'leap year', () => {
+  expect( next( '0 0 29 FEB *', after( '2026-06-26T00:00:00Z' ) )[ 0 ].toISOString() ).toBe( '2028-02-29T00:00:00.000Z' );
+} );
+
 summary();
