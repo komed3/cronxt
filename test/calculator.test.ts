@@ -106,4 +106,13 @@ test( 'timezone Europe/Berlin', () => {
   );
 } );
 
+test( 'DST transition', () => {
+  expect( next('30 2 * * *', {
+    ...after( '2026-10-24T22:00:00Z' ),
+    timezone: 'Europe/Berlin'
+  } )[ 0 ].toISOString() ).toBe(
+    '2026-10-25T01:30:00.000Z'
+  );
+} );
+
 summary();
